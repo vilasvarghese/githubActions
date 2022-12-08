@@ -1,0 +1,94 @@
+Duration – 8 hours
+	Core Concepts of a GitHub Action
+	Supercharging Your GitHub Flow
+	Demo: Simple Hello World Workflow
+	Dissecting the Workflow File
+	Navigating Workflow Run Logs
+	Action Events and the GitHub API
+	Understanding the Role of Repository Secrets
+	GitHub Actions: Core Concepts Overview
+	Continuous Integration with GitHub Actions
+	GitHub Actions Hero
+	Get Started with the Project Repository
+	Add a Template Workflow File to Your New Project
+	Add and Fix Tests for CI
+	Customize the Workflow File with Multiple Target Environments
+	Run Multiple Jobs
+	Work with Build Artifacts
+	Approval Workflow, Branch Protections, and Marketplace Actions
+	Visualize Your GitHub Actions Workflow
+	Add an Approval Workflow File to the Project
+	Add a Label Approved Community Action
+	Create Branch Protections
+	Add a Giphy Generator Action
+	Introduction to GitHub Learning Lab
+	Anatomy of a GitHub Action
+	When Should You Build a Custom Action?
+	The Command-line Metaphor
+	Javascript and Docker Actions
+	The Action Metadata
+	Interacting with the Host
+	Public vs. Private Actions
+	What Happens at Runtime
+	Creating a JavaScript Action
+	Introducing the Auto Release Draft Action
+	Setting up the Environment
+	The Walking Skeleton
+	Continuous Integration
+	Parsing the Event Data
+	Running Command-line Programs
+	Using the GitHub REST API
+	Troubleshooting
+	Creating a Docker Action
+	Introducing the Auto Release Milestone Action
+	The Walking Skeleton
+	Parsing the Event Payload
+	Running Command-line Programs
+	Handling and Reporting Errors
+	Publishing an Action in the GitHub Marketplace
+	Documentation and Branding
+	Versioning with SemVer
+	Releasing
+	CI/CD with GitHub Actions
+
+Duration - 8 Hours
+	Understanding GitHub Actions
+	Enabling CI/CD with GitHub Actions
+	GitHub Actions Workflows and Runners
+	Jobs, Steps, and YAML
+	Creating a Basic GitHub Actions Workflow
+	Adding a Job to an Existing Workflow
+	Triggering a CI Build
+	Deploy a Cloud Run service
+	Deploy an App Engine app
+	Exploring GitHub Actions Workflows
+	Workflow Triggers
+	Triggering a Workflow from Outside GitHub
+	Demo: External Triggers
+	Environment Variables and Contexts
+	Expressions, Conditions, and Functions
+	Using Scripts in a Workflow
+	Inputs and Outputs of GitHub Actions
+	Sharing Data between Jobs in a Workflow
+	Caching for Performance
+	Configuring Multiple Jobs Using a Build Matrix
+	Using the Actions Workflow Log
+	Security for GitHub Actions
+	GitHub Secrets and Secret Scanning
+	Configuring GitHub Actions Settings
+	Create Google Container Registry
+	Push Container to Google container registry Using GitHub Actions
+	Introduction to Terragrunt
+	Create a GKE cluster from Terragrunt
+	Deploy Container to GKE
+	Security Hardening for GitHub Actions
+	Configuring Runners
+	GitHub-hosted Runners
+	Self-hosted Runners
+	Configuring a Self-hosted Runner
+	Implementing DevOps Testing
+	Automated Testing in GitHub Actions Workflows
+	Implement Unit Testing in GitHub Actions
+	Service Containers for Integration Testing
+	Static Code Analysis with SonarCloud
+	Publishing to GitHub Packages

@@ -1,0 +1,584 @@
+Total duration  – 16 hours
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Core Concepts of a GitHub Action
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Introduction to Git
+			
+			Create a git account
+			Create a public git repository
+				github actions are free in github repo.
+				git clone
+				git add 
+				git commit 
+				git push 
+				
+		
+		GitHub Actions 
+			continuous integration and continuous delivery (CI/CD) platform 
+			we can automate 
+				your build, 
+				test, and 
+				deployment pipeline. 
+			can create workflows 
+				build and test every pull request 
+			or 
+				deploy merged pull requests to production.
+
+		GitHub Actions goes beyond just DevOps 
+			run workflows 
+		For e.g., 
+			a workflow 
+				to add the appropriate labels 
+					whenever someone creates a new issue in your repository.
+
+		GitHub provides 
+			Linux, 
+			Windows, and 
+			macOS virtual machines 
+				to run your workflows, 
+			or 
+				can host own self-hosted runners 
+					in your own data center or 
+					cloud infrastructure.
+
+
+		Components of Github Actions
+		----------------------------	
+		- Workflows
+		  Events
+		  Jobs
+		  Actions
+		  Runners
+		  
+		  
+		Workflows
+		---------
+		configurable automated process 
+			run one or more jobs. 
+		defined in YAML file 
+		checked in to your repository 
+		run 
+			automatically 
+				through event 
+		or 
+			manually
+		or 
+			scheduled.
+
+		attached to a github repo.
+		contain one or more jobs
+		defined in 
+			.github/workflows directory 
+				in a repository
+		repository can have multiple workflows
+			each can perform a different set of tasks. 
+		For example
+			workflow to 
+				build and 
+				test 
+					pull requests
+			
+			deploy application 
+				every time a release is created
+			
+			add a label every time someone opens a new issue.
+		
+			More info: https://docs.github.com/en/actions/using-workflows
+		
+		Events
+		------
+		An event 
+			specific activity in a repository 
+				that triggers a workflow run. 
+		For e.g.
+			create a pull request, 
+			opens an issue, 
+			pushes a commit to a repository. 
+		
+		Alternativley we can
+			trigger a workflow 
+				on a schedule
+				by posting to a REST API
+				manually.
+
+
+		complete list of events 
+			https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+		
+		
+		
+		Jobs
+		----
+		a set of steps in a workflow 
+			execute on the same runner. 
+		Each step 
+			either a shell script 
+				will be executed
+		or 
+			an action that will be run. 
+		
+		Steps 
+			executed in order 
+			dependent on each other. 
+			executed on the same runner
+			can share data from one step to another. 
+			
+		define a runner - where it gets executed
+		contain one/more steps
+		run 
+			parallely or 
+			sequentially
+		can run conditionally	
+		For e.g.
+			step that builds your application 
+				followed by 
+			step that tests application.
+
+		by default, 
+			jobs have no dependencies 
+			run in parallel 
+		can configure a job's dependencies 
+			with other jobs; 
+			
+			then jobs waits for the dependent job to complete 
+				before it can run. 
+
+
+		Using jobs: https://docs.github.com/en/actions/using-jobs
+		
+		Steps
+		-----
+			Execute a shell script or an action
+			Steps are executed in order
+			Can be conditionally executed
+		
+		Actions
+		----------
+		a custom application 
+			for GitHub Actions platform 
+			performs a complex 
+				but frequently repeated task. 
+		help reduce duplicate code 
+		An action 
+			can pull your git repository from GitHub
+			set up env. 
+				for your build environment
+			set up authentication to your cloud provider.
+
+			can write our own actions
+			or 
+			can find actions to use in your workflows in the GitHub Marketplace.
+
+		Creating actions: 
+			https://docs.github.com/en/actions/creating-actions
+		
+		Runners
+		----------
+		a server 
+			runs your workflows 
+			
+		Each runner 
+			can run a single job at a time. 
+			GitHub provides 
+				Ubuntu Linux, 
+				Microsoft Windows, and 
+				macOS runners 
+					to run your workflows; 
+			each workflow 
+				run executes in a fresh, 
+				newly-provisioned virtual machine. 
+			GitHub also offers 
+				larger runners, 
+					larger configurations. 
+				
+		Using larger runners
+		https://docs.github.com/en/actions/using-github-hosted-runners/using-larger-runners
+		
+		
+		For 
+			different operating system 
+		or 
+			specific hardware configuration
+				host your own runners. 
+		
+		Hosting your own runners
+		https://docs.github.com/en/actions/hosting-your-own-runners
+
+			
+			
+			
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Demo: Simple Hello World Workflow
+		
+lab1		Actions 
+				Create a simple workflow
+				Overview of simple workflow
+				
+				Replace the content with first-action.yml
+				
+				
+lab2
+
+name: learn-github-actions
+run-name: ${{ github.actor }} is learning GitHub Actions
+on: [push]
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+      - run: npm install -g bats
+      - run: bats -v
+
+
+
+	  
+				
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Dissecting the Workflow File
+			Understanding the content
+
+name: learn-github-actions
+	Optional - 
+		name of the workflow 
+		will appear in the "Actions" tab 
+			(left side)
+		
+run-name: ${{ github.actor }} is learning GitHub Actions
+	Optional 
+		name for workflow 
+			will list in workflows as "bitsvilas is learning GitHub Actions"
+			
+		runs generated from the workflow
+			will appear in the list of workflow 
+				under "Actions" tab. 
+		here we are using expression 
+			
+			For more information, see "Workflow syntax for GitHub Actions."
+
+on: [push]
+	Specifies 
+		when to trigger the workflow. 
+		For e.g. 
+			e.g. uses the push event, so a workflow run is triggered every time someone pushes a change to the repository or merges a pull request. This is triggered by a push to every branch; for examples of syntax that runs only on pushes to specific branches, paths, or tags, see "Workflow syntax for GitHub Actions."
+jobs:
+	Groups together all the jobs that run in the learn-github-actions workflow.
+
+check-bats-version:
+	Defines a job named check-bats-version. 
+	The child keys will define properties of the job.
+  runs-on: ubuntu-latest
+	Configures the job to run on the latest version of an Ubuntu Linux runner. This means that the job will execute on a fresh virtual machine hosted by GitHub. For syntax examples using other runners, see "Workflow syntax for GitHub Actions."
+  steps:
+	Groups together all the steps that run in the check-bats-version job. Each item nested under this section is a separate action or shell script.
+    - uses: actions/checkout@v3
+		The uses keyword specifies that this step will run v3 of the actions/checkout action. This is an action that checks out your repository onto the runner, allowing you to run scripts or other actions against your code (such as build and test tools). You should use the checkout action any time your workflow will run against the repository's code.
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '14'
+		This step uses the actions/setup-node@v3 action to install the specified version of the Node.js (this example uses v14). This puts both the node and npm commands in your PATH.
+    - run: npm install -g bats
+		The run keyword tells the job to execute a command on the runner. In this case, you are using npm to install the bats software testing package.
+    - run: bats -v
+		Finally, you'll run the bats command with a parameter that outputs the software version.
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Navigating Workflow Run Logs
+			Go Back to "Actions"
+				Trigger workflow if required.
+			Go Back to "Actions"
+				Watch the logs.
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Action Events and the GitHub API
+			can configure workflows 
+				to run when 
+					specific activity on GitHub happens
+				or 	at a scheduled time
+				or 	when an event outside of GitHub occurs.
+			
+			
+		Repository related
+			push
+				Pushing a commit
+			pull_request
+				Pull request action
+					(opened, closed, …)
+			create
+				A branch or tag was created
+			fork
+				Repository was forked
+			issues
+				An issue was opened, deleted, …
+			issue_comment
+				Issue or pull request comment action
+			watch
+			Repository was starred
+			discussion
+				Discussion action
+					(created, deleted, …)
+		Scheduled
+			type: schedule
+		Manually trigger
+			type: workflow_dispatch
+		repository_dispatch
+			REST API request triggers workflow	
+		workflow_call
+			Can be called by other workflows
+		Many more
+			https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+			
+			
+
+
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Understanding the Role of Repository Secrets
+		
+		Secrets 
+			encrypted variables 
+			can be created in an 
+					organization, 
+					repository, or 
+					repository environment. 
+			available to use in GitHub Actions workflows. 
+			GitHub uses 
+				libsodium sealed box 
+					ensure that secrets are encrypted 
+						before they reach GitHub and 
+					remain encrypted until you use them in a workflow.
+
+		For secrets stored at the organization-level
+			can use access policies 
+				to control which repositories can use organization secrets.
+				
+			can share secrets between multiple repositories
+			No need to create duplicate secrets. 
+			Updating an organization secret in one location 
+				updates in all repository workflows using it.
+
+		For secrets stored at the environment level
+			can enable required reviewers to control access to the secrets. 
+			A workflow job cannot access environment secrets 
+				until approval is granted by required approvers.
+		
+		
+The following rules apply to secret names:
+
+	Secret names can only contain alphanumeric characters ([a-z], [A-Z], [0-9]) or underscores (_). Spaces are not allowed.
+	Secret names must not start with the GITHUB_ prefix.
+	Secret names must not start with a number.
+	Secret names are not case-sensitive.
+	Secret names must be unique at the level they are created at. For example, a secret created at the repository level must have a unique name in that repository, and a secret created at the organization level must have a unique name at that level.
+
+	If a secret with the same name exists at multiple levels, the secret at the lowest level takes precedence. For example, if an organization-level secret has the same name as a repository-level secret, then the repository-level secret takes precedence.		
+		
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		GitHub Actions: Core Concepts Overview
+		
+			done already
+			
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Continuous Integration with GitHub Actions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		GitHub Actions Hero
+		https://github-actions-hero.vercel.app/
+		
+		
+			push
+			push, pull_request
+			replace * with master
+			types: [opened, edited, milestoned, labeled]
+			
+			    - '**.jpg'
+				- '!**/**.jpg'
+			
+      - name: execute script Deploy
+        run: sh ./scriptDeploy.sh
+
+			
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Get Started with the Project Repository
+		
+		Create a project repo. in github 
+			[already completed?]
+		
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Add a Template Workflow File to Your New Project
+			Create a .github/workflow folder
+			Create an yaml file inside the same.
+		
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Add and Fix Tests for CI
+			
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Customize the Workflow File with Multiple Target Environments
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Run Multiple Jobs
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Work with Build Artifacts
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Approval Workflow, Branch Protections, and Marketplace Actions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Visualize Your GitHub Actions Workflow
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Add an Approval Workflow File to the Project
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Add a Label Approved Community Action
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Create Branch Protections
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Add a Giphy Generator Action
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Introduction to GitHub Learning Lab
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+	Anatomy of a GitHub Action
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		When Should You Build a Custom Action?
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		The Command-line Metaphor
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Javascript and Docker Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		The Action Metadata
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Interacting with the Host
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Public vs. Private Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		What Happens at Runtime
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+	Creating a JavaScript Action
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Introducing the Auto Release Draft Action
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Setting up the Environment
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		The Walking Skeleton
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Continuous Integration
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Parsing the Event Data
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Running Command-line Programs
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Using the GitHub REST API
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Troubleshooting
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+	Creating a Docker Action
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Introducing the Auto Release Milestone Action
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		The Walking Skeleton
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Parsing the Event Payload
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Running Command-line Programs
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Handling and Reporting Errors
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+	Publishing an Action in the GitHub Marketplace
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Documentation and Branding
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Versioning with SemVer
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Releasing
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CI/CD with GitHub Actions
+Duration - 8 Hours
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Understanding GitHub Actions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Enabling CI/CD with GitHub Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		GitHub Actions Workflows and Runners
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Jobs, Steps, and YAML
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Creating a Basic GitHub Actions Workflow
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Adding a Job to an Existing Workflow
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Triggering a CI Build
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Deploy a Cloud Run service
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Deploy an App Engine app
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Exploring GitHub Actions Workflows
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Workflow Triggers
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Triggering a Workflow from Outside GitHub
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Demo: External Triggers
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Environment Variables and Contexts
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Expressions, Conditions, and Functions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Using Scripts in a Workflow
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Inputs and Outputs of GitHub Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Sharing Data between Jobs in a Workflow
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Caching for Performance
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Configuring Multiple Jobs Using a Build Matrix
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Using the Actions Workflow Log
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Security for GitHub Actions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		GitHub Secrets and Secret Scanning
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Configuring GitHub Actions Settings
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Create Google Container Registry
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Push Container to Google container registry Using GitHub Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Introduction to Terragrunt
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Create a GKE cluster from Terragrunt
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Deploy Container to GKE
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Security Hardening for GitHub Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Configuring Runners
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		GitHub-hosted Runners
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Self-hosted Runners
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Configuring a Self-hosted Runner
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Implementing DevOps Testing
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Automated Testing in GitHub Actions Workflows
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Implement Unit Testing in GitHub Actions
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Service Containers for Integration Testing
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Static Code Analysis with SonarCloud
+		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Publishing to GitHub Packages
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Others
+If you are unable to see Actions option in github
+	https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository
