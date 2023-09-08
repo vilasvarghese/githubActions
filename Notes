@@ -14,6 +14,7 @@ Total duration  – 16 hours
 				
 		
 		GitHub Actions 
+			platform to automate workflow or business process
 			continuous integration and continuous delivery (CI/CD) platform 
 			we can automate 
 				your build, 
@@ -40,6 +41,31 @@ Total duration  – 16 hours
 				can host own self-hosted runners 
 					in your own data center or 
 					cloud infrastructure.
+
+
+-----------------------------------------------------------
+Events
+------
+1. Pull Request
+2. Push (branch)
+3. Issues 
+	Create issues
+	Close issues 
+	
+	Events ---triggers --> Workflow 
+		Workflow has jobs 
+			Job1  -------------------> Runner1 (can be linux)
+				Step1
+					can be actions or shell commands 
+				Step2
+			Job2  -------------------> Runner2 (can be windows)
+				Step1
+				Step2
+				Step3
+			
+		Jobs can run in parallel
+		Steps run in sequence
+-----------------------------------------------------------
 
 
 		Components of Github Actions
@@ -109,25 +135,27 @@ Total duration  – 16 hours
 		
 		Jobs
 		----
-		a set of steps in a workflow 
-			execute on the same runner. 
-		Each step 
-			either a shell script 
-				will be executed
-		or 
-			an action that will be run. 
+			a set of steps in a workflow 
+				all steps in a job execute on the same runner. 
+			Each step 
+				either a shell script 
+					will be executed
+			or 
+				an action that will be run. 
+			Each Job 
+				Associated with a runner 
+				
 		
-		Steps 
+		Steps
+		-----
 			executed in order 
 			dependent on each other. 
 			executed on the same runner
 			can share data from one step to another. 
+			Execute a shell script or an action
 			
 		define a runner - where it gets executed
 		contain one/more steps
-		run 
-			parallely or 
-			sequentially
 		can run conditionally	
 		For e.g.
 			step that builds your application 
@@ -138,7 +166,8 @@ Total duration  – 16 hours
 			jobs have no dependencies 
 			run in parallel 
 		can configure a job's dependencies 
-			with other jobs; 
+			with other jobs;
+			make it sequential
 			
 			then jobs waits for the dependent job to complete 
 				before it can run. 
@@ -146,14 +175,10 @@ Total duration  – 16 hours
 
 		Using jobs: https://docs.github.com/en/actions/using-jobs
 		
-		Steps
-		-----
-			Execute a shell script or an action
-			Steps are executed in order
-			Can be conditionally executed
 		
 		Actions
 		----------
+		Runs a step - logs the result.
 		a custom application 
 			for GitHub Actions platform 
 			performs a complex 
@@ -217,6 +242,15 @@ lab1		Actions
 				Replace the content with first-action.yml
 				
 				
+name: hello-world
+on: push
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: my-step
+        run: echo "Hello World!"				
+				
 lab2
 
 name: learn-github-actions
@@ -234,7 +268,7 @@ jobs:
       - run: bats -v
 
 
-
+ 
 	  
 				
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -256,7 +290,7 @@ run-name: ${{ github.actor }} is learning GitHub Actions
 			will appear in the list of workflow 
 				under "Actions" tab. 
 		here we are using expression 
-			
+		  	
 			For more information, see "Workflow syntax for GitHub Actions."
 
 on: [push]
@@ -402,7 +436,7 @@ The following rules apply to secret names:
 		Get Started with the Project Repository
 		
 		Create a project repo. in github 
-			[already completed?]
+			[already completed]
 		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Add a Template Workflow File to Your New Project
@@ -411,51 +445,659 @@ The following rules apply to secret names:
 		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Add and Fix Tests for CI
+		
+			Follow ci.yml
+			
+			Get a test to fail
 			
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Customize the Workflow File with Multiple Target Environments
+		
+			https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment
+		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Run Multiple Jobs
+			Add two jobs in same file
+			cd.yml
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Work with Build Artifacts
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
+		https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts
+		
+		Artifacts 
+			allow you to persist data 
+				after a job has completed
+				share that data with another job 
+					in the same workflow. 
+			An artifact 
+				file 
+			or 
+				collection of files 
+					produced during a workflow run. 
+			For example, 
+				use artifacts 
+					save your build and 
+					test output 
+						after a workflow run has ended. 
+				All actions and workflows called within a run have write access to that run's artifacts.
+
+		By default
+			GitHub 
+				stores build logs and 
+				artifacts 
+					for 90 days
+			retention period can be customized. 
+		For more information, see "Usage limits, billing, and administration." The retention period for a pull request restarts each time someone pushes a new commit to the pull request.
+
+		common artifacts that you can upload:
+
+			Log files and core dumps
+			Test results, failures, and screenshots
+			Binary or compressed files
+			Stress test performance output and code coverage results
+			
+			Storing artifacts uses storage space on GitHub. 
+				GitHub Actions usage 
+					free for standard GitHub-hosted runners in public repositories
+				and 
+					for self-hosted runners. 
+				For private repositories
+					GitHub account receives 
+						certain amount of free minutes and 
+						storage for use 
+							with GitHub-hosted runners
+								depending on the product used with the account. 
+				Any usage 
+					beyond the included amounts 
+						is controlled by spending limits. 
+				For more information, see "Managing billing for GitHub Actions."
+
+		Artifacts 
+			uploaded during a workflow run
+		and 
+			you can view an artifact's name and size in the UI. 
+		When an artifact is downloaded using the GitHub UI, all files that were individually uploaded as part of the artifact get zipped together into a single file. This means that billing is calculated based on the size of the uploaded artifact and not the size of the zip file.
+
+		GitHub provides two actions that you can use to upload and download build artifacts. For more information, see the actions/upload-artifact and download-artifact actions.
+
+		To share data between jobs:
+
+		Uploading files: Give the uploaded file a name and upload the data before the job ends.
+		Downloading files: You can only download artifacts that were uploaded during the same workflow run. When you download a file, you can reference it by name.
+		The steps of a job share the same environment on the runner machine, but run in their own individual processes. To pass data between steps in a job, you can use inputs and outputs. For more information about inputs and outputs, see "Metadata syntax for GitHub Actions."
+
+		Comparing artifacts and dependency caching
+		Artifacts and caching are similar because they provide the ability to store files on GitHub, but each feature offers different use cases and cannot be used interchangeably.
+
+		Use caching when you want to reuse files that don't change often between jobs or workflow runs, such as build dependencies from a package management system.
+		Use artifacts when you want to save files produced by a job to view after a workflow run has ended, such as built binaries or build logs.
+		For more information on dependency caching, see "Caching dependencies to speed up workflows."
+		
+		
+		
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	Approval Workflow, Branch Protections, and Marketplace Actions
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Visualize Your GitHub Actions Workflow
+			Same actions 
+				https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/using-the-visualization-graph
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Add an Approval Workflow File to the Project
+			https://cloudlumberjack.com/posts/github-actions-approvals/
+			or
+		https://timheuer.com/blog/add-approval-workflow-to-github-actions/
+		
+		cd.yml
+		approvalworkflow.yml
+		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Add a Label Approved Community Action
+		https://github.com/marketplace/actions/tiangolo-s-label-approved
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Create Branch Protections
+			https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule
+		
+		Create a new repo.
+		Add a collaborator
+		Collaborator should be able to push into the repo.
+		
+			git clone 
+			git config user.email "vilas.varghese@gmail.com"
+			or 
+			git config credential.username "vilasvarghese"
+			git config credential.username "bitsvilas"
+			
+			git add .
+			git commit 
+			git push
+			
+		Add branch protection 
+			"settings" ->
+				"Branches" ->
+					"Add branch protection rule"
+			collaborators won't be able to push
+			
+			git log --oneline
+			git switch -c "newbranch"
+			git push -u origin newbranch
+			
+			go to the browser 
+				make a pull request.
+		
+		
+		user who has made the pr will not be able to approve/merge
+		
+		So login as the other user
+			go to the PR (Pull requests besides Action)
+			click on the PR
+			Click on commits tab on top
+			Click on Review and approve it
+		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Add a Giphy Generator Action
+		
+			https://github.com/marketplace/actions/giphy-generator
+			node 12 used here is deprecated.
+			Need to find alternative.
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Introduction to GitHub Learning Lab
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			https://github.com/marketplace/github-learning-lab
+			https://www.youtube.com/watch?v=sz6zfrQpCQg
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
 	Anatomy of a GitHub Action
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		
+		
 		When Should You Build a Custom Action?
+			Simplify Workflow Steps 
+				Reduce complexity
+					multiple actions reduced to one
+			Public Action unavailable
+			Contribute to community
+				e.g. a logic improvement
+					build it and contribute to community
+			
+		
+		
+			https://github.com/tgrall/check-files-action
+			
+			Sometimes you don't find the actions you need.
+			You can write your own custom actions
+			https://docs.github.com/en/actions/creating-actions/about-custom-actions		
+			https://github.com/jannekem/publish-schedule-action/blob/master/action.yml
+			https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions
+			https://github.com/actions/toolkit
+			
+	
+		Types of GitHub Actions
+			- Javascript actions
+				- Execute a javascript (NodeJS) file
+				- Good if you know js
+				OS supported: 
+					Linux, macOS, Windows
+			- Docker actions
+				Create a dockerfile 
+				Perform any action in any language 
+				Lots of flexibility
+				Basic docker knowledge required.
+				OS supported: 
+					Linux
+			
+			- Composite actions
+				- Combine multiple workflow steps into a single action
+				- Combine run and uses
+				- Reuse shared steps
+				- no extra skills required.
+				OS supported: 
+					Linux, macOS, Windows
+
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		The Command-line Metaphor
+		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Javascript and Docker Actions
+		
+		JavaScript actions
+		------------------
+		can run directly on a runner machine
+		separate the action code from the environment
+		simplifies the action code 
+		executes faster than a Docker container action.
+
+		To ensure your JavaScript actions are compatible with all GitHub-hosted runners 
+			(Ubuntu, Windows, and macOS), 
+			use pure JavaScript 
+			don't use other binaries.
+		use binaries that already exist in the runner image.
+
+
+		If developing a Node.js project
+		GitHub Actions Toolkit provides packages 
+			use it to speed up development. 
+		For more information
+		https://github.com/actions/toolkit
+		
+		
+		Docker container actions
+		------------------------
+		package the environment 
+			with the GitHub Actions code. 
+		use any tools or dependencies.
+
+		Docker an ideal option when we 
+			need to use any supported versions 
+				of an operating system
+				dependencies, 
+				tools, and 
+				code. 
+		But Docker container actions 
+			are slower than JavaScript actions.
+			can only execute on Linux operating system. 
+			
+		Self-hosted runners 
+			must be Linux operating 
+			have Docker installed 
+			
+			
+		More info. on self hosted runners	https://docs.github.com/en/actions/hosting-your-own-runners/about-self-hosted-runners#requirements-for-self-hosted-runner-machines.
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		The Action Metadata
+			Actions require a metadata file 
+			uses YAML syntax.	
+		
+		metadata filename 
+			must be 
+				action.yml 
+			or 
+				action.yaml. 
+		defines 
+			inputs, 
+			outputs
+			runs configuration for your action.		
+		
+			
+			
+About YAML syntax for GitHub Actions
+name
+author
+description
+inputs
+  Example: Specifying inputs
+  inputs.<input_id>
+  inputs.<input_id>.description
+  inputs.<input_id>.required
+  inputs.<input_id>.default
+  inputs.<input_id>.deprecationMessage
+outputs for Docker container and JavaScript actions
+  Example: Declaring outputs for Docker container and JavaScript actions
+  outputs.<output_id>
+  outputs.<output_id>.description
+outputs for composite actions
+  Example: Declaring outputs for composite actions
+  outputs.<output_id>.value
+runs
+runs for JavaScript actions
+  Example: Using Node.js v16
+  runs.using
+  runs.main
+  runs.pre
+  runs.pre-if
+  runs.post
+  runs.post-if
+runs for composite actions
+  runs.using
+  runs.steps
+    runs.steps[*].run
+	runs.steps[*].shell
+	runs.steps[*].if
+	runs.steps[*].name
+	runs.steps[*].id
+	runs.steps[*].env
+	runs.steps[*].working-directory
+	runs.steps[*].uses
+	runs.steps[*].with
+runs for Docker container actions
+  Example: Using a Dockerfile in your repository
+  Example: Using public Docker registry container
+  runs.using
+  runs.pre-entrypoint
+  runs.image
+  runs.env
+  runs.entrypoint
+  runs.post-entrypoint
+  runs.args
+    Example: Defining arguments for the Docker container
+branding
+  Example: Configuring branding for an action
+  branding.color
+  branding.icon			
+
+	
+
+name
+	Required 
+	name of action. 
+	GitHub displays the name in the Actions tab 
+		help visually identify actions 
+			in each job.
+
+author
+	Optional 
+	The name of the action's author.
+
+description
+	Required 
+	A short description of the action.
+	Displayed in Actions page
+	
+inputs
+	Optional 
+	Input parameters 
+		allow to specify input. 
+	GitHub 
+		stores input parameters 
+			as environment variables. 
+				in uppercase letters 
+		converted to lowercase at runtime. 
+	recommend: 
+		use lowercase input ids.
+
+inputs:
+  numOctocats:
+    description: 'Number of Octocats'
+    required: false
+    default: '1'
+  octocatEyeColor:
+    description: 'Eye color of the Octocats'
+    required: true
+
+
+Define input in a workflow file 
+	or use a default input value
+	GitHub creates an environment variable 
+		name: INPUT_<VARIABLE_NAME>. 
+	environment variable names in
+		uppercase letters 
+		replaces spaces with _ characters.
+
+	For composite actions
+		not automatically converted to INPUT_<VARIABLE_NAME>. 
+		If the conversion doesn't occur, 
+		can change these inputs manually.
+
+	To access environment variable 
+		in a Docker container 
+			pass the input using args 
+			For more information 
+			
+
+
+inputs.<input_id>
+	Required 
+	A string identifier to associate with the input. The value of <input_id> is a map of the input's metadata. The <input_id> must be a unique identifier within the inputs object. The <input_id> must start with a letter or _ and contain only alphanumeric characters, -, or _.
+
+inputs.<input_id>.description
+Required A string description of the input parameter.
+
+inputs.<input_id>.required
+Optional A boolean to indicate whether the action requires the input parameter. Set to true when the parameter is required.
+
+inputs.<input_id>.default
+Optional A string representing the default value. The default value is used when an input parameter isn't specified in a workflow file.
+
+inputs.<input_id>.deprecationMessage
+Optional If the input parameter is used, this string is logged as a warning message. You can use this warning to notify users that the input is deprecated and mention any alternatives.	
+	
+
+
+outputs for Docker container and JavaScript actions
+-------------------------------------------------------------
+Optional Output parameters allow you to declare data that an action sets. Actions that run later in a workflow can use the output data set in previously run actions. For example, if you had an action that performed the addition of two inputs (x + y = z), the action could output the sum (z) for other actions to use as an input.
+
+Outputs are Unicode strings, and can be a maximum of 1 MB. The total of all outputs in a workflow run can be a maximum of 50 MB.
+
+If you don't declare an output in your action metadata file, you can still set outputs and use them in a workflow. For more information on setting outputs in an action, see "Workflow commands for GitHub Actions."
+
+Example: Declaring outputs for Docker container and JavaScript actions
+outputs:
+  sum: # id of the output
+    description: 'The sum of the inputs'
+outputs.<output_id>
+Required A string identifier to associate with the output. The value of <output_id> is a map of the output's metadata. The <output_id> must be a unique identifier within the outputs object. The <output_id> must start with a letter or _ and contain only alphanumeric characters, -, or _.
+
+outputs.<output_id>.description
+Required A string description of the output parameter.
+
+outputs for composite actions
+Optional outputs use the same parameters as outputs.<output_id> and outputs.<output_id>.description (see "outputs for Docker container and JavaScript actions"), but also includes the value token.
+
+Outputs are Unicode strings, and can be a maximum of 1 MB. The total of all outputs in a workflow run can be a maximum of 50 MB.
+	
+
+For more refer: https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions	
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Interacting with the Host
+
+		
+
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Public vs. Private Actions
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		What Happens at Runtime
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
+
+
+	Getting started with custom actions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Step1
+	- create a new repo.
+	- clone it
+	- copy the content from https://github.com/bitsvilas/customactions/tree/main/01%20Starting%20Project
+	- Check in and verify the Action
+	
+Step2	
+	- Custom composite action 
+		- Can be an independent repo.
+			- if public can be used by any body
+	
+	- Create a composite custom action
+		Create actions\cached-deps in .gitops
+			This name could have been any name.
+		Follow the syntax exactly as below
+		
+
+Create a file named action.yml 
+	file name: action.yml is mandatory
+		
+name: 'Get & Cache Dependencies'
+#This description is important and appears in https://github.com/marketplace?type=actions
+description: 'Get the dependencies (via npm) and cache them.'
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache dependencies
+      id: cache
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: deps-node- modules-${{ hashFiles('**/package-lock.json') }}
+    - name: Install dependencies
+      id: install
+      if: steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true'
+      run: npm ci
+      shell: bash
+#shell is additional in github custom actions. You don't need to define this in action. 	  
+
+Comment step 1 and uncomment step2 in D:\PraiseTheLord\HSBGInfotech\Others\bitsvilas\customactions\.github\workflows
+
+Step3
+
+		
+
+
+
+-----------------------------------------------------
+
+Syntax explanation of each field 
+
+
+This GitHub Actions workflow appears to be related to a Python project. Let's break down each section of the workflow:
+https://github.com/python/cpython/blob/main/.github/workflows/build.yml
+
+    Name: 
+		The name of the workflow is "Tests." 
+		will be displayed in the GitHub Actions interface.
+
+    On: 
+		Specifies the events that trigger this workflow:
+        workflow_dispatch: 
+			allows manual triggering (get's a button)
+				from the GitHub Actions interface.
+        push: 
+			The workflow is triggered when code is pushed to the main branch.
+        pull_request: 
+			The workflow is triggered when a pull request is opened or updated for the main branch.
+
+    Permissions: 
+		defines the permissions required by the workflow. 
+		workflow needs read access to repository contents.
+
+    Concurrency: 
+		controls the concurrency of the workflow. 
+		uses a naming convention to group workflows 
+			by the workflow name, 
+			GitHub head reference (branch), 
+		or 
+			GitHub run ID. 
+		allows for better control over concurrent executions of the workflow. 
+		in-progress runs can be canceled 
+			when a new one is triggered.
+
+    Jobs: 
+		The workflow contains multiple jobs, 
+			each with a specific name and set of steps.
+
+        check_source: 
+			This job is named "Check for source changes." 
+			runs on an ubuntu-latest runner 
+				    GitHub-hosted runners: 
+						These are runners provided by GitHub. They are hosted on GitHub's infrastructure, and you can use them for free with certain limitations. GitHub-hosted runners are available for Linux, Windows, and macOS. They come with a variety of pre-installed software and tools for common development tasks.
+							Ubuntu runner: A runner based on Ubuntu Linux.
+							Windows runner: A runner based on Windows Server.
+							macOS runner: A runner based on macOS.
+
+					Self-hosted runners: 
+						These are runners that you set up and manage on your own infrastructure. You can use self-hosted runners to run workflows in your own environment, which can be useful for specialized or secure scenarios. Self-hosted runners are highly customizable, and you can install the specific software and tools you need.
+
+					GitHub Actions Runner for ARM: 
+						GitHub introduced support for ARM-based runners, which can be particularly useful for building and testing software for ARM architectures.
+
+					GitHub-hosted runners for specific purposes: 
+						GitHub provides specialized runners optimized for certain use cases. For example, there are runners optimized for running Android builds and runners optimized for running Docker-based workflows.
+
+					Third-party runners: 
+						Some third-party solutions offer additional runner options that you can integrate with GitHub Actions. These may include runners for specific cloud platforms, virtualization technologies, or other specialized environments.
+
+
+			has a timeout of 10 minutes. 
+		Steps:
+			It performs the following steps:
+            Checks for source code changes and sets run_tests=true if changes are detected.
+            Determines whether to run hypothesis tests based on the Git branch name.
+            Computes a hash for the config cache key.
+            Gets a list of changed documentation-related files.
+            Checks for documentation changes and sets run-docs=true if changes are detected.
+		
+		
+			uses: specify an external action 
+		    name: 
+				A user-defined name for this step
+					will be displayed in the workflow run's logs for clarity.
+			id: 
+				An optional unique identifier 
+				can be used to reference the step's outputs later in the workflow.
+			run: 
+				shell script 
+				or 
+				command 
+					to be executed 
+						here calculates a hash value and appends it to a file named $GITHUB_OUTPUT.
+
+			- name: Get a list of the changed documentation-related files
+			Get a list of the changed documentation-related files:
+
+				name: A user-defined name for this step.
+				if: 
+					An optional condition that determines whether this step should be executed. In this case, the step runs only if the GitHub event that triggered the workflow is a pull request (github.event_name == 'pull_request').
+				id: 
+					An optional unique identifier for this step.
+				uses: 
+					Specifies an external action (Ana06/get-changed-files@v2.2.0) that is used to retrieve a list of changed files.
+				with: 
+					Defines input parameters for the action
+						liek filter and format. 
+					The filter parameter 
+						specifies a filter to select specific files
+						format specifies the output format.
+
+			Check for docs changes:
+
+				name: A user-defined name for this step.
+				if: Another conditional statement that determines whether this step should run. It checks if the GitHub event is a pull request (github.event_name == 'pull_request') and whether there are any added, modified, or renamed files in the output of the previous step (steps.changed-docs-files.outputs.added_modified_renamed != '').
+				id: An optional unique identifier for this step.
+				run: The shell script or command to be executed. In this case, it appends a line to the $GITHUB_OUTPUT file with the text "run-docs=true" if the conditions specified in the if statement are met.
+				
+				needs: specifies depencies.
+			
+
+        check-docs: 
+			This job is named "Docs" and depends on the check_source job. It runs if run-docs is true. It uses a local file named .github/workflows/reusable-docs.yml.
+
+        check_generated_files: 
+			This job checks if generated files are up to date. It runs on an ubuntu-latest runner and depends on the check_source job. It runs various build and test commands, checks for changes in regenerated files, and performs other checks.
+
+			build_win32, build_win_amd64, build_macos, build_ubuntu: These jobs build Python for different platforms (Windows x86, Windows x64, macOS, Ubuntu) and run tests. They also depend on the check_source job and only run if run_tests is true.
+
+        build_ubuntu_ssltests: 
+			This job builds Python for Ubuntu and runs SSL tests. It has multiple versions of OpenSSL to test against.
+
+        test_hypothesis: 
+			This job runs hypothesis tests on Ubuntu if both run_tests and run_hypothesis are true. It sets up a virtual environment and runs tests.
+
+        build_asan: 
+			This job is for Address Sanitizer testing on Ubuntu. It builds Python with Address Sanitizer and runs tests.
+
+        all-required-green: 
+			This job is a special job that checks whether all the other jobs have succeeded. It has dependencies on various jobs and checks whether they succeeded or failed.
+
+	The workflow is designed to handle different aspects of a Python project, including checking for source code changes, building Python for different platforms, running tests, and performing various checks and validations. It also handles concurrency and ensures that dependent jobs run when necessary.
+-----------------------------------------------------
+
+
+
 	Creating a JavaScript Action
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		Simple javascript action
+		------------------------
+Follow
+		
+https://docs.github.com/en/actions/creating-actions/creating-a-javascript-action			
+---------------------									
+			
+	
 		Introducing the Auto Release Draft Action
-		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+			https://github.com/ecampidoglio/auto-release-draft
+			https://github.com/marketplace/actions/automatic-releases
+			
+			https://github.com/EddieHubCommunity/LinkFree
+				fix: bump last digit
+				feat: bump middle digit
+				first digit, we manually bump
+
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Setting up the Environment
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		The Walking Skeleton
@@ -473,6 +1115,12 @@ The following rules apply to secret names:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
 	Creating a Docker Action
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Follow 
+	https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action
+	
+		Dockerfile limitation:
+		https://docs.github.com/en/actions/creating-actions/dockerfile-support-for-github-actions
+	
 		Introducing the Auto Release Milestone Action
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		The Walking Skeleton
@@ -486,6 +1134,31 @@ The following rules apply to secret names:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~		
 	Publishing an Action in the GitHub Marketplace
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	In this module, we created custom Actions that were stored in the same repository as our Workflow(s).
+
+Alternatively, we could've stored the custom Actions in separate repositories (which therefore then only include the Action definition + code).
+
+This is actually quite straightforward:
+
+Create a new, local project folder which contains your action.yml file + all the code belonging to the action (Important: Don't put your action.yml file or code in a .github/actions folder or anything like that - just keep it directly on the root level of your created project!)
+
+Add a local Git repository to your created project (via git init)
+
+Create your commit(s) via git add and git commit
+
+Create a GitHub repository and connect it to your local Git repository (via git remote add)
+
+Add a tag via git tag -a -m "My action release" v1
+
+Push your local code to the remote GitHub repository (via git push --follow tags)
+
+Use your custom Action in any other Workflow (in any other project and repository) by referencing the repository which contains your action (e.g., my-account/my-action@v1)
+
+If your custom Action is stored in a public repository, it can also be published to the GitHub Actions Marketplace as described here: https://docs.github.com/en/actions/creating-actions/publishing-actions-in-github-marketplace#publishing-an-action
+	
+	
+	
 		Documentation and Branding
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Versioning with SemVer
@@ -540,10 +1213,32 @@ Duration - 8 Hours
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	Security for GitHub Actions
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		GitHub Secrets and Secret Scanning
+		Vulnerabilities
+			- Scripts
+	
+	
+		Injection
+			Value's if hardcoded in workflow
+			e.g. title of a workflow has a check 
+			workflow/command behaviour could be changed
+			
+		Malicious third-party actions
+			can perform any logic
+				logic can be malicious 
+			Example: a third party actions that reads and exports secrets
+			Use only trusted Actions
+				inspect code of unknown/untrusted  authors.
+		Permission
+			Least trusted permission
+			
+
+
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Configuring GitHub Actions Settings
+		
+			https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository
+			
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Create Google Container Registry
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -562,8 +1257,16 @@ Duration - 8 Hours
 		GitHub-hosted Runners
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Self-hosted Runners
+		
+			https://github.com/actions/runner-images/blob/main/images/linux/Ubuntu2204-Readme.md
+			Machines come with few s/w already installed
+			https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners
+			click on "Preinstalled software"
+			click on the os you are going with.
+
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Configuring a Self-hosted Runner
+		
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		Implementing DevOps Testing
 		~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -582,3 +1285,46 @@ Duration - 8 Hours
 Others
 If you are unable to see Actions option in github
 	https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository
+	
+If you get error while pushing 
+	 git config credential.username "bitsvilas"
+	 
+	 or git config global commands.
+	 
+	 continue with the push
+		git is intelligent to make you login and authenticate.
+		
+	if you are still getting wrong user error
+	git config user.name “Your Name”
+	git config user.email “name@email.com”
+	git remote add origin git@github.com:medero/cho.git
+	
+	still getting this issue.
+	
+	https://stackoverflow.com/questions/5335197/gits-famous-error-permission-to-git-denied-to-user	
+		
+If you don't have permissions still, then 
+	Go to settings -> "Developer settings" -> Personal access token
+	Generate new token
+		give all permission to 
+			- repo 
+			- workflow
+			
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Docker deployment from github actions
+	D:\PraiseTheLord\HSBGInfotech\Others\bitsvilas\githubactions\.github\workflows\cd-docker.yml
+secret examples
+	D:\PraiseTheLord\HSBGInfotech\Others\bitsvilas\githubactions\.github\workflows\cd-docker.yml
+
+Approval Workflow, Branch Protections
+	Line : 517
+	D:\PraiseTheLord\HSBGInfotech\Others\bitsvilas\githubactions\.github\workflows\approvals and approvalsworkflow
+Public vs. Private Actions
+	custom actions already covers this.
+What Happens at Runtime
+Configure runners
+
+security
+create gke cluster from Terragrunt
+			

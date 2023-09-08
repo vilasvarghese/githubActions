@@ -1,0 +1,23 @@
+name: Simple Build Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build project
+      run: |
+        # Replace this with actual build commands for your project
+        echo "Building the project..."
+        # For example, if you're building a Node.js project:
+        # npm install
+        # npm run build
+        
