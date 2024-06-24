@@ -1,0 +1,27 @@
+References 
+			https://github.com/rekhugopal
+			https://github.com/RekhuGopal/InvokeGitHubActionsCaller
+			https://github.com/RekhuGopal/InvokeGitHubActionsCalled
+			https://www.youtube.com/watch?v=wvlsUgwhR5A
+
+
+Forked repo.
+			https://github.com/vilasvarghese/InvokeGitHubActionsCaller
+			https://github.com/vilasvarghese/InvokeGitHubActionsCalled
+			
+			
+	1. Need to create a PAT_TOKEN_GITHUB (Personal
+		Profile (right top) -> settings -> Developer settings -> 
+			Create a class (both type are fine) token 
+				Generate New Token  -> 
+					(select classic) 
+					authenticate 
+					
+				NAME: PAT_TOKEN_GITHUB
+			Caller github action repo 
+				Settings
+				secrets and variables 
+				actions 
+				New repo secrets.
+				
+				

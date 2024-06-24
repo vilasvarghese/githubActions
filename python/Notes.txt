@@ -1,0 +1,7 @@
+References: 
+	1. https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+	2. https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+	3. https://github.com/vilasvarghese/github-action-python/tree/main/.github/workflows
+	4. D:\PraiseTheLord\HSBGInfotech\Others\vilas\github-action-python\.github\workflows
+	5. https://shipyard.build/blog/your-first-python-github-action/
+	

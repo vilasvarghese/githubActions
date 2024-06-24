@@ -36,11 +36,19 @@ Total duration  – 16 hours
 			Linux, 
 			Windows, and 
 			macOS virtual machines 
+			docker containers 	
 				to run your workflows, 
 			or 
-				can host own self-hosted runners 
-					in your own data center or 
+				can host 
+					own self-hosted runners 
+						in your own data center or 
 					cloud infrastructure.
+			Matrix builds
+			Streaming 
+			Searchable 
+			Linkable logs 
+			
+
 
 
 -----------------------------------------------------------
@@ -126,7 +134,12 @@ Events
 				on a schedule
 				by posting to a REST API
 				manually.
-
+--------------------------
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * *'
+--------------------------
 
 		complete list of events 
 			https://docs.github.com/en/actions/reference/events-that-trigger-workflows

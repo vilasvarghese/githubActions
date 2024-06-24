@@ -1,0 +1,9 @@
+https://www.youtube.com/watch?v=wNsiJWewyjU	
+
+vscode 
+	python should be installed and accessible from vscode command line
+		view -> terminal 
+			python --version
+			
+	python extension should be installed
+	

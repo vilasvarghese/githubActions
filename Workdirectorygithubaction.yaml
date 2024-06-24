@@ -1,0 +1,55 @@
+name: Working Dirs & Shells
+on: [push]
+defaults:
+  run:
+    shell: bash
+    # working-directory: /de/ed
+jobs:
+  display-wd-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display Working Directory & List Files
+        run: |
+          pwd
+          ls -a
+          echo $GITHUB_SHA
+          echo $GITHUB_REPOSITORY
+          echo $GITHUB_WORKSPACE
+      - name: Change Working Dir
+        working-directory: /home/runner
+        run: pwd
+  display-wd-info-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Display Working Directory & List Files
+        run: |
+          Get-Location
+          dir
+          echo $env:GITHUB_SHA
+          echo $env:GITHUB_REPOSITORY
+          echo $env:GITHUB_WORKSPACE
+      - name: Python Shell
+        shell: python
+        run: |
+          import platform 
+          print(platform.processor())
+		  
+
+#$env:GITHUB_SHA
+
+    #commit SHA (Secure Hash Algorithm) that triggered the workflow run. 
+    #unique identifier for the specific code version.
+    #Use case: You can leverage $GITHUB_SHA to name artifacts or cache entries based on the commit that generated them, ensuring version-specific handling.
+
+#$env:GITHUB_REPOSITORY
+
+    #full name (owner and repository name) of the GitHub repository.
+    #Use case: If your workflow interacts with multiple repositories or needs to construct URLs dynamically, $GITHUB_REPOSITORY can provide the necessary context.
+
+#$env:GITHUB_WORKSPACE
+
+    #working directory for your workflow steps.
+    #Use case: Many actions rely on $GITHUB_WORKSPACE to locate files, generate reports, or execute commands within your project's codebase.
