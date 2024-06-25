@@ -2,6 +2,8 @@ name: External Events
 on:
   repository_dispatch:
     types: [build]
+  workflow_dispatch:
+  
 jobs:
   echo-a-string:
     runs-on: ubuntu-latest

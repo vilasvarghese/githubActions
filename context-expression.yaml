@@ -1,0 +1,44 @@
+name: Context and Expression Exploration
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  explore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Print GitHub context
+        run: echo "## GitHub Context"
+        env:  # Print all context variables (not recommended in production)
+          CONTEXT_DUMP: ${{ toJson(context) }}
+
+      - name: Print specific context variables"
+        run: |
+          echo "## Specific Context Variables"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "SHA: ${{ github.sha }}"
+
+      - name: Conditional step based on branch
+        run: |
+          if [[ ${{ github.ref }} == "refs/heads/main" ]]; then
+            echo "This step only runs on the main branch!"
+          else
+            echo "This step runs on all branches except main."
+          fi
+
+      - name: Using a secret stored in GitHub Secrets
+        run: echo "Secret value: ${{ secrets.MY_SECRET }}"  # Replace with your secret name
+
+      - name: Using a job output
+        uses: ./.  # Use this workflow file itself as an action
+        with:
+          message: "Hello from a nested workflow (job output)"
+        id: nested_step
+
+      - name: Accessing job output from previous step
+        run: echo "Nested step message: ${{ steps.nested_step.outputs.message }}"

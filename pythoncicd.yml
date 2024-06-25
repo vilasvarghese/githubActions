@@ -1,0 +1,35 @@
+name: CI/CD for Python Project
+
+on:
+  push:
+    branches: [ main ]  # You can add other branches here
+  pull_request:  # Runs on pull request events
+  workflow_dispatch: 
+  
+jobs:
+  build:  # Name of the job
+    runs-on: ubuntu-latest  # Replace with desired OS (e.g., macOS, windows-latest)
+    steps:
+      - uses: actions/checkout@v3  # Checks out your code
+
+      - name: Set up Python environment
+        uses: actions/setup-python@v3  # Sets up Python environment
+        with:
+          python-version: 3.9  # Specify desired Python version
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt  # Replace with your command
+
+      - name: Run tests
+        run: pytest  # Replace with your testing command (e.g., unittest, etc.)
+
+      - name: Code coverage (optional)
+        uses: actions/coverage@v3  # Optionally include code coverage
+        with:
+          fail-ci: false  # Set to true to fail on low coverage (optional)
+
+      - name: Deploy (optional)
+        # Add deployment steps here 
+        if: success()  # Only deploy if previous steps succeed
+		
+		

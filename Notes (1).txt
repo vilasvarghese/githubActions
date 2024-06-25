@@ -909,8 +909,6 @@ Additional Tips:
 
 
 
-
-
 Ib. ▪ Explore self-hosted runners and hosted runners.
 --------------------------------------------------------------------------------------------
 
@@ -1128,6 +1126,9 @@ Important Considerations:
 Scaling self-hosted runner pools
 		docker 
 			https://www.youtube.com/watch?v=RcHGqCBofvw
+			
+			runner_in_docker_k8s.txt
+			
 		kubernetes 
 			https://www.youtube.com/watch?v=lD0t-UgKfEo
 			
@@ -1763,7 +1764,7 @@ info
 --------------------------------------------------------------------------------------------
 ▪ Integrate with other tools and services.
 --------------------------------------------------------------------------------------------
-https://www.coachdevops.com/2024/02/how-to-integrate-sonarqube-with-github.html
+
 
 
 GitHub Actions 
@@ -2893,6 +2894,8 @@ o Practice writing comments and documenting your code effectively.
 --------------------------------------------------------------------------------------------
 
 
+	Understanding the Role of Repository Secrets
+		Yes - secrets covered below 
 	custom workflows using Actions
 		Yes, - by simple 
 			normal workflow 
@@ -2981,15 +2984,4 @@ jobs:
       - name: Log Greeting Time
         run: echo "${{ steps.greet.outputs.time }}"
 -------------------------------------------
-		
-		
-
-How to do Error Handling in github actions
-------------------------------------------
-1. continue on error 
-	https://copdips.com/2023/09/github-actions--error-handling.html
-	
-2. conditionally execute if a step fails
-
-https://stackoverflow.com/questions/57850553/github-actions-check-steps-status
 		
